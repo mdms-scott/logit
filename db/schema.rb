@@ -17,7 +17,6 @@ ActiveRecord::Schema.define(version: 20180226201711) do
     t.text "full_body", default: ""
     t.text "parameters"
     t.integer "response"
-    t.boolean "successful"
     t.float "view_time"
     t.float "ar_time"
     t.float "total_time"
@@ -35,7 +34,6 @@ ActiveRecord::Schema.define(version: 20180226201711) do
     t.index ["has_warning"], name: "index_requests_on_has_warning"
     t.index ["request_type"], name: "index_requests_on_request_type"
     t.index ["response"], name: "index_requests_on_response"
-    t.index ["successful"], name: "index_requests_on_successful"
     t.index ["total_time"], name: "index_requests_on_total_time"
   end
 

@@ -6,6 +6,7 @@ class LogParser
   PARAMETER_LINE_REGEX = /^\[(.*)\].*(Parameters):\s*({.*})$/
   RENDER_LINE_REGEX = /^\[(.*)\].*(Rendered)\s(.*)\s\((.*)ms\)$/
   COMPLETED_LINE_REGEX = /^\[(.*)\].*(Completed)\s(\d*).*in\s(\d*)ms\s\(Views: (.*)ms\s\|\s.*: (.*)ms\)$/
+  UNTAGGED_LINE_REGEX = /^([^\[].*)$/
   def self.parse_logs
     Dir.glob('log/parse_me/*.log') do |log_file|
       File.open(log_file, "r").each_line do |line|
@@ -15,12 +16,14 @@ class LogParser
         prm = line.match(PARAMETER_LINE_REGEX)
         rm = line.match(RENDER_LINE_REGEX)
         cm = line.match(COMPLETED_LINE_REGEX)
+        um = line.match(UNTAGGED_LINE_REGEX)
         if fbm && fbm[1]
           request = Request.find_or_create_by(uuid: fbm[1])
           request.uuid = fbm[1]
           request.full_body.empty? ? request.full_body = fbm[2] : request.full_body << "\n#{fbm[2]}"
-
-          # request.save
+        elsif um
+          request = Request.last # get the last request as we don't have a uuid here
+          request.full_body << "\n#{um[1]}"
         end
         if sm && sm[2]
           request.request_type = sm[3]
@@ -32,8 +35,6 @@ class LogParser
           request.controller = pm[3]
           request.action = pm[4]
           request.request_type = pm[5]
-
-          # request.save
         end
         if prm
           foo =  eval(prm[3].tr('"', "'"))
@@ -48,11 +49,9 @@ class LogParser
           request.total_time = cm[4]
           request.view_time = cm[5]
           request.ar_time = cm[6]
-
-          # request.save
         end
+
         request.save if request
-        # return prm
       end
     end
   end

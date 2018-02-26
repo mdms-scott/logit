@@ -21,7 +21,6 @@ class CreateRequests < ActiveRecord::Migration[5.1]
       t.float :render_time
 
       t.index :response
-      t.index :successful
       t.index :total_time
       t.index :controller
       t.index :has_warning
