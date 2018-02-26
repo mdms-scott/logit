@@ -24,6 +24,7 @@ class LogParser
         elsif um
           request = Request.last # get the last request as we don't have a uuid here
           request.full_body << "\n#{um[1]}"
+          request.has_warning = true
         end
         if sm && sm[2]
           request.request_type = sm[3]

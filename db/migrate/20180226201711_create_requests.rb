@@ -14,7 +14,6 @@ class CreateRequests < ActiveRecord::Migration[5.1]
       t.string :uri
       t.string :requester
       t.boolean :has_warning
-      t.text :message
       t.datetime :timestamp
       t.string :request_type
       t.string :render
