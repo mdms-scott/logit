@@ -1,9 +1,9 @@
-class Request < ActiveRecord::Migration[5.1]
+class CreateRequests < ActiveRecord::Migration[5.1]
   def change
     enable_extension 'hstore'
     create_table :requests do |t|
       t.string :uuid
-      t.text :full_body
+      t.text :full_body, default: ""
       t.hstore :parameters, default: {}
       t.integer :response
       t.boolean :successful
