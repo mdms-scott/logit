@@ -12,14 +12,10 @@
 
 ActiveRecord::Schema.define(version: 20180226201711) do
 
-  # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
-  enable_extension "hstore"
-
   create_table "requests", force: :cascade do |t|
     t.string "uuid"
     t.text "full_body", default: ""
-    t.hstore "parameters", default: {}
+    t.text "parameters"
     t.integer "response"
     t.boolean "successful"
     t.float "view_time"
@@ -28,6 +24,7 @@ ActiveRecord::Schema.define(version: 20180226201711) do
     t.string "controller"
     t.string "action"
     t.string "uri"
+    t.string "requester"
     t.boolean "has_warning"
     t.text "message"
     t.datetime "timestamp"

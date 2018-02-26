@@ -4,15 +4,15 @@ class CreateRequests < ActiveRecord::Migration[5.1]
     create_table :requests do |t|
       t.string :uuid
       t.text :full_body, default: ""
-      t.hstore :parameters, default: {}
+      t.text :parameters
       t.integer :response
-      t.boolean :successful
       t.float :view_time
       t.float :ar_time
       t.float :total_time
       t.string :controller
       t.string :action
       t.string :uri
+      t.string :requester
       t.boolean :has_warning
       t.text :message
       t.datetime :timestamp
