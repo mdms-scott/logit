@@ -9,7 +9,7 @@ class LogParser
   UNTAGGED_LINE_REGEX = /^([^\[].*)$/
 
   def self.parse_logs
-    Dir.glob('log/parse_me/*.log') do |log_file|
+    Dir.glob('import_logs/*.log') do |log_file|
       File.open(log_file, "r").each_line do |line|
         fbm = line.match(FULL_BODY_REGEX)
         sm = line.match(START_LINE_REGEX)
