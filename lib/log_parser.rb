@@ -1,11 +1,11 @@
 require 'yaml'
 class LogParser
-  FULL_BODY_REGEX = /^\[(.*)\]\W(.*)$/
-  START_LINE_REGEX = /^\[(.*)\].*(Started)\s(\S*)\s\"(\S*)\" for (.*) at (.*)$/
-  PROCESSING_LINE_REGEX = /^\[(.*)\].*(Processing by)\s(\S*)\#(\S*) as (\S*)$/
-  PARAMETER_LINE_REGEX = /^\[(.*)\].*(Parameters):\s*({.*})$/
-  RENDER_LINE_REGEX = /^\[(.*)\].*(Rendered)\s(.*)\s\((.*)ms\)$/
-  COMPLETED_LINE_REGEX = /^\[(.*)\].*(Completed)\s(\d*).*in\s(\d*)ms\s\(Views: (.*)ms\s\|\s.*: (.*)ms\)$/
+  FULL_BODY_REGEX = /^\[(.*?)\]\W(.*)$/
+  START_LINE_REGEX = /^\[(.*?)\].*(Started)\s(\S*)\s\"(\S*)\" for (.*) at (.*)$/
+  PROCESSING_LINE_REGEX = /^\[(.*?)\].*(Processing by)\s(\S*)\#(\S*) as (\S*)$/
+  PARAMETER_LINE_REGEX = /^\[(.*?)\].*(Parameters):\s*({.*})$/
+  RENDER_LINE_REGEX = /^\[(.*?)\].*(Rendered)\s(.*)\s\((.*)ms\)$/
+  COMPLETED_LINE_REGEX = /^\[(.*?)\].*(Completed)\s(\d*).*in\s(\d*)ms\s\(Views: (.*)ms\s\|\s.*: (.*)ms\)$/
   UNTAGGED_LINE_REGEX = /^([^\[].*)$/
   def self.parse_logs
     Dir.glob('log/parse_me/*.log') do |log_file|
