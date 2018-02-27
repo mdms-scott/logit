@@ -27,6 +27,7 @@ ActiveRecord::Schema.define(version: 20180226201711) do
     t.boolean "has_warning"
     t.datetime "timestamp"
     t.string "request_type"
+    t.string "content_type"
     t.string "render"
     t.float "render_time"
     t.index ["controller"], name: "index_requests_on_controller"

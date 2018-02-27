@@ -1,6 +1,9 @@
 class RequestsController < ApplicationController
   def index
+    # Get the requests for the specifed page
     @requests = Request.page(params[:page])
+
+    # Overwrite the requests if there is a query or boolean specification
     if params[:q]
       @requests = Request.where("full_body LIKE '%#{params[:q]}%'").page(params[:page])
     end
@@ -8,12 +11,9 @@ class RequestsController < ApplicationController
       @requests = Request.where(has_warning: true)
     end
     if params[:slowest]
-      @requests = @requests.order(total_time: :desc)
+      @requests = Request.order(total_time: :desc)
     end
+    
     render json: @requests
-  end
-  def show
-    @request = Request.find(params[:id])
-    render json: @request
   end
 end

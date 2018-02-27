@@ -16,6 +16,7 @@ class CreateRequests < ActiveRecord::Migration[5.1]
       t.boolean :has_warning
       t.datetime :timestamp
       t.string :request_type
+      t.string :content_type
       t.string :render
       t.float :render_time
 

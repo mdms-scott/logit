@@ -7,6 +7,7 @@ class LogParser
   RENDER_LINE_REGEX = /^\[(.*?)\].*(Rendered)\s(.*)\s\((.*)ms\)$/
   COMPLETED_LINE_REGEX = /^\[(.*?)\].*(Completed)\s(\d*).*in\s(\d*)ms\s\(Views: (.*)ms\s\|\s.*: (.*)ms\)$/
   UNTAGGED_LINE_REGEX = /^([^\[].*)$/
+
   def self.parse_logs
     Dir.glob('log/parse_me/*.log') do |log_file|
       File.open(log_file, "r").each_line do |line|
@@ -17,7 +18,9 @@ class LogParser
         rm = line.match(RENDER_LINE_REGEX)
         cm = line.match(COMPLETED_LINE_REGEX)
         um = line.match(UNTAGGED_LINE_REGEX)
-        if fbm && fbm[1]
+
+        # Get or create the request object, append to full_body if existing
+        if fbm
           request = Request.find_or_create_by(uuid: fbm[1])
           request.uuid = fbm[1]
           request.full_body.empty? ? request.full_body = fbm[2] : request.full_body << "\n#{fbm[2]}"
@@ -26,26 +29,36 @@ class LogParser
           request.full_body << "\n#{um[1]}"
           request.has_warning = true
         end
-        if sm && sm[2]
+
+        # Set the attributes matched by the start_line_regex
+        if sm
           request.request_type = sm[3]
           request.uri = sm[4]
           request.requester = sm[5]
           request.timestamp = sm[6]
         end
-        if pm && pm[2]
+
+        # Set the attributes matched by the processing_line_regex
+        if pm
           request.controller = pm[3]
           request.action = pm[4]
-          request.request_type = pm[5]
+          request.content_type = pm[5]
         end
+
+        # Set the attributes matched by the parameter_line_regex
+        # Note this is super-not-actually safe in any real situation as you dont want to eval things out of the logs
         if prm
-          foo =  eval(prm[3].tr('"', "'"))
-          request.parameters = foo
+          request.parameters = eval(prm[3].tr('"', "'"))
         end
-        if rm && rm[2]
+
+        # Set the attributes matched by the render_line_regex
+        if rm
           request.render = rm[3]
           request.render_time = rm[4]
         end
-        if cm && cm[2]
+
+        # Set the attributes matched by the completed_line_regex
+        if cm
           request.response = cm[3]
           request.total_time = cm[4]
           request.view_time = cm[5]
